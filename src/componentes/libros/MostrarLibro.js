@@ -7,9 +7,17 @@ import Spinner from '../layout/Spinner';
 import PropTypes from 'prop-types';
 
 class MostrarLibro extends Component {
-    state = {  }
    
-   
+   devolverLibro= codigoSuscriptor =>{
+        const { firestore,libro } = this.props;
+        //Creamos una copia del libro
+        const copiaLibro = {...this.props.libro};
+        //Eliminamos de prestados el suscriptor que devuelve el libro
+        const prestados = libro.prestados.filter(suscriptor=>suscriptor.codigo !== codigoSuscriptor);
+       libro.prestados = prestados;
+       firestore.update({ collection: "libros", doc: libro.id }, libro)
+           
+   }
     
     render() { 
         const { libro } = this.props;
@@ -19,7 +27,7 @@ class MostrarLibro extends Component {
         //Crear boton para solicitar alquiler
         let btnAlquiler=null;
         if(libro.stock - libro.prestados.length > 0)
-            btnAlquiler = <Link to={`/libros/prestamo/${libro.id}`} className="btn btn-success">Solicitar alquiler</Link>
+            btnAlquiler = <Link to={`/libros/prestamo/${libro.id}`} className="btn btn-primary">Solicitar alquiler</Link>
         return ( 
             <div className="row mt-4">
                 <div className="col-md-6 mb-4">
@@ -45,8 +53,28 @@ class MostrarLibro extends Component {
                         </div>
                     </div>
                    {btnAlquiler}
+                    {libro.prestados.length === 0 ? null : 
+                        
+                            <div class="card border-primary mt-5">
+                                <div class="card-header">Suscriptores en posesión del libro</div>
+                                {libro.prestados.map(suscriptor =>(
+                                    <div class="card-body">
+                                        <h5 class="card-title">{suscriptor.nombre} {suscriptor.apellido}</h5>
+                                        <p class="card-text">
+                                            <span className="font-weight-bold">Código suscriptor: </span>{suscriptor.codigo}
+                                            <span className="font-weight-bold"> Formación: </span>{suscriptor.formacion}
+                                            <span className="font-weight-bold"> Prestado desde: </span>{suscriptor.fechaPrestamo}
+                                        </p>
+                                        <p><button type="button" className="btn btn-primary" onClick={() =>this.devolverLibro(suscriptor.codigo)}>Devolver Libro</button></p>
+                                    </div>
+                                ))}  
+                            </div>
+                    }
+                    
                 </div>
+                
             </div> 
+            
          );
     }
 }
