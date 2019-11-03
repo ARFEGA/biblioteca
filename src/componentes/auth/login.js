@@ -32,7 +32,7 @@ class Login extends Component {
                                 <i className="fas fa-lock"></i> Inicir Sesión
                             </h2>
                             <form onSubmit={this.validar}>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label for="InputEmail">Email address: </label>
                                     <input 
                                         type="email"
@@ -45,7 +45,7 @@ class Login extends Component {
                                         onChange={this.leerDatos}/>
                                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label for="InputPassword">Password: </label>
                                     <input 
                                         type="password" 
@@ -56,7 +56,7 @@ class Login extends Component {
                                         required 
                                         onChange={this.leerDatos}/>
                                 </div>
-                                <input type="submit" className="btn btn-success btn_block" value="Login"/> 
+                                <input type="submit" className="btn btn_block btn-primary" value="Login"/> 
                             </form>
                         </div>
                     </div>

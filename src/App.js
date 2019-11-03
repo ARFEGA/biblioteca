@@ -17,7 +17,7 @@ import NuevoSuscriptor from './componentes/suscripcion/NuevoSuscriptor';
 import EditarSuscriptor from './componentes/suscripcion/EditarSuscriptor';
 import MostrarSuscriptor from './componentes/suscripcion/MostrarSuscriptor';
 import Navbar from './componentes/layout/Navbar';
-import Login from './componentes/auth/login';
+import Login from './componentes/auth/Login';
 
 
 function App() {

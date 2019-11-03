@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link }  from 'react-router-dom';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
 // 
-const Navbar = () => {
-    return (
+class Navbar extends Component {
+    state = {  }
+    render() { 
+        return (  
 
         <nav className="navbar  navbar-expand-lg navbar-dark bg-primary">
         <nav className="navbar navbar-light">
@@ -27,5 +32,11 @@ const Navbar = () => {
   </div>
 </nav> );
 }
+}
  
-export default Navbar ;
+export default compose(
+    firestoreConnect(),
+    connect((state,props) =>{
+        console.log(state)
+    })
+)(Navbar)
