@@ -13,7 +13,7 @@ import 'firebase/auth';
 
 //Configuracion firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyAmsqNoegI7yrCV8D65Jj4i5KeXH0UVj_A",
+    apiKey: "",
     authDomain: "biblioteca-6d8e5.firebaseapp.com",
     databaseURL: "https://biblioteca-6d8e5.firebaseio.com",
     projectId: "biblioteca-6d8e5",
