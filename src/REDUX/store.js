@@ -7,7 +7,9 @@ import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseReducer }   from 'react-redux-firebase'
 import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 import firebase from 'firebase/app';
-import 'firebase/firestore'
+import 'firebase/firestore';
+//Necesário para poder hacer login en firebase
+import 'firebase/auth';
 
 //Configuracion firebase
 const firebaseConfig = {
