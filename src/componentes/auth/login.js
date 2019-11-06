@@ -29,7 +29,7 @@ class Login extends Component {
                     <div className="card mt-5">
                         <div className="card-body">
                             <h2 className="text-center py-4">
-                                <i className="fas fa-lock"></i> Inicir Sesión
+                                <i className="fas fa-lock"></i> Iniciar Sesión
                             </h2>
                             <form onSubmit={this.validar}>
                                 <div className="form-group">
