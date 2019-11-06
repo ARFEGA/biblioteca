@@ -13,10 +13,9 @@ class MostrarLibro extends Component {
         //Creamos una copia del libro
         const copiaLibro = {...this.props.libro};
         //Eliminamos de prestados el suscriptor que devuelve el libro
-        const prestados = libro.prestados.filter(suscriptor=>suscriptor.codigo !== codigoSuscriptor);
-       libro.prestados = prestados;
-       firestore.update({ collection: "libros", doc: libro.id }, libro)
-           
+       const prestados = copiaLibro.prestados.filter(suscriptor=>suscriptor.codigo !== codigoSuscriptor);
+       copiaLibro.prestados = prestados;
+       firestore.update({ collection: "libros", doc: libro.id }, copiaLibro)       
    }
     
     render() { 
@@ -65,7 +64,7 @@ class MostrarLibro extends Component {
                                             <span className="font-weight-bold"> Formación: </span>{suscriptor.formacion}
                                             <span className="font-weight-bold"> Prestado desde: </span>{suscriptor.fechaPrestamo}
                                         </p>
-                                        <p><button type="button" className="btn btn-primary" onClick={() =>this.devolverLibro(suscriptor.codigo)}>Devolver Libro</button></p>
+                                        <p><button type="button" className="btn btn-primary" onClick={() => this.devolverLibro(suscriptor.codigo)}>Devolver Libro</button></p>
                                     </div>
                                 ))}  
                             </div>

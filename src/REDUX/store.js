@@ -10,10 +10,11 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 //Necesário para poder hacer login en firebase
 import 'firebase/auth';
-
+//Reducers personalizados
+import buscarUsuarioReducer from './reducers/buscarSuscriptorReducer';
 //Configuracion firebase
 const firebaseConfig = {
-    apiKey: "",
+    apiKey: "AIzaSyAmsqNoegI7yrCV8D65Jj4i5KeXH0UVj_A",
     authDomain: "biblioteca-6d8e5.firebaseapp.com",
     databaseURL: "https://biblioteca-6d8e5.firebaseio.com",
     projectId: "biblioteca-6d8e5",
@@ -41,7 +42,8 @@ const createStoreWithFirebase = compose(
 // Add firebase to reducers
 const rootReducer = combineReducers({
     firebase: firebaseReducer,
-    firestore: firestoreReducer // <- needed if using firestore
+    firestore: firestoreReducer, // <- needed if using firestore
+    suscriptor:buscarUsuarioReducer
 })
 
 // Create store with reducers and initial state

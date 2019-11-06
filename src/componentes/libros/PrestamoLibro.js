@@ -6,25 +6,26 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Spinner from '../layout/Spinner';
 import FichaSuscriptor from '../suscripcion/FichaSuscriptor';
+//REDUX Actions
+import { buscarSuscriptor }  from '../../REDUX/actions/buscarSuscriptorAction';
 
 class PrestamoLibro extends Component {
 
     state={
         codigoSuscriptor:'',
-        suscriptor:{},
-        hayResultado:false
+        hayResultado:null
     }
     //Leer dato introducido
     leerDato = e =>{
         this.setState({[e.target.name]:e.target.value})
     }
-
-    buscarSuscriptor = e => {
+    
+    consultarSuscriptor = e => {
         e.preventDefault();
         //Asegurar en firestore la existencia del suscriptor
         const { codigoSuscriptor } = this.state;
         //Extraemos firestore
-        const { firestore } =this.props;
+        const { firestore, buscarSuscriptor } =this.props;
         //Creamos la conexión a la db
         const db = firestore.collection('suscriptores');
         //Creamos la select
@@ -32,26 +33,30 @@ class PrestamoLibro extends Component {
         //Ejecutamos la select
         select.then(result => {
             if(result.empty){
+                //Sin resultados
+                buscarSuscriptor({})
                this.setState({
-                   suscriptor:{},
                    hayResultado:false
                })
             }else{
                 const datos = result.docs[0];
+                //Pasar información a redux
+                buscarSuscriptor(datos.data());
                 this.setState({
-                    suscriptor: datos.data(),
-                    hayResultado:true
+                    hayResultado: true
                 }) 
+                console.log("DATOS SUSCRIPTOR:");
+                console.log(datos.data())
             }
         })
 
     }
 
     registrarPrestamo = () =>{
-        const { suscriptor } = this.state;
         const fechaPrestamo = new Date().toLocaleDateString();
-        const { libro,firestore,history } = this.props;
+        const { libro, firestore, history, suscriptor } = this.props;
         suscriptor.fechaPrestamo=fechaPrestamo;
+
         //Agregamos el suscriptor al campo prestados, que es de tipo map
         libro.prestados.push(suscriptor);
         firestore.update({
@@ -60,12 +65,12 @@ class PrestamoLibro extends Component {
     }
     render() { 
         
-        const { libro } = this.props;
+        const { libro, suscriptor } = this.props;
         
         if(!libro) return <Spinner/>
 
-        const {hayResultado,suscriptor} = this.state;
-
+        const {hayResultado} = this.state;
+        
         let fichaSuscriptor,btnSolicitar;
         if(hayResultado){
             fichaSuscriptor = <FichaSuscriptor
@@ -85,7 +90,7 @@ class PrestamoLibro extends Component {
                     <h2><i className="fas fa-hand-point-right"></i> {libro.titulo} </h2>
                     <div className="row justify-content-center mt-5">
                         <div className="col-8">
-                            <form onSubmit={this.buscarSuscriptor}>
+                            <form onSubmit={this.consultarSuscriptor}>
                                 <legend className="text-center">Buscar suscriptor por código</legend>
                                 <div className="form-group">
                                     <input type="text" name="codigoSuscriptor" onChange={this.leerDato} placeholder="Introducir código suscriptor" className="form-control" rounded/>
@@ -96,6 +101,8 @@ class PrestamoLibro extends Component {
                         <div className="col-8 mt-5">
                             {fichaSuscriptor}
                             {btnSolicitar}
+                            {hayResultado===false ? <div className="alert alert-danger text-center">Cógido {this.state.codigoSuscriptor} de suscriptor no encontrado</div>:null
+                            }
                         </div>
                     </div>
                 </div>
@@ -106,7 +113,8 @@ class PrestamoLibro extends Component {
  
 
 PrestamoLibro.propTypes = {
-    firestore: PropTypes.object.isRequired
+    firestore: PropTypes.object.isRequired,
+    suscriptor:PropTypes.object.isRequired
 }
 export default compose(
     firestoreConnect(props => [{
@@ -116,7 +124,8 @@ export default compose(
     }]),
     connect((state, props) =>
         ({//Así tendremos el contenido del libro que queremos pedir prestado, pasandolo por props
-            libro: state.firestore.ordered.libro && state.firestore.ordered.libro[0]
-        }))
+            libro: state.firestore.ordered.libro && state.firestore.ordered.libro[0],
+            suscriptor:state.suscriptor
+        }), { buscarSuscriptor })
 )(PrestamoLibro);
 
